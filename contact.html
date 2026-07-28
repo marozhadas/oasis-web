@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>צור קשר - Oasis</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a href="index.html" class="logo">Oasis<span>.</span></a>
+    <nav class="nav-links">
+      <a href="index.html">בית</a>
+      <a href="index.html#services">שירותים</a>
+      <a href="index.html#why">למה אנחנו</a>
+      <a href="contact.html" class="active">צור קשר</a>
+    </nav>
+    <a href="contact.html" class="nav-cta">בואו נדבר</a>
+    <div class="burger"><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <h1>צרו איתנו קשר</h1>
+    <p>נשמח לשמוע מכם ולעזור למצוא את הפתרון המתאים ביותר</p>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="contact-wrap">
+
+      <div class="contact-info">
+        <h3>פרטי התקשרות</h3>
+        <p>המשרד שלנו פתוח בימים א'-ה', 08:00-17:00. אפשר גם להשאיר הודעה בכל שעה ונחזור אליכם בהקדם.</p>
+
+        <div class="info-item">
+          <div class="info-icon">📍</div>
+          <div><h4>כתובת</h4><p>רחוב הברזל 3, תל אביב</p></div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">📞</div>
+          <div><h4>טלפון</h4><p>03-1234567</p></div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">✉️</div>
+          <div><h4>אימייל</h4><p>info@oasis-hr.co.il</p></div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">🕐</div>
+          <div><h4>שעות פעילות</h4><p>א'-ה' | 08:00 - 17:00</p></div>
+        </div>
+
+        <div class="social-row">
+          <a href="#" aria-label="פייסבוק">f</a>
+          <a href="#" aria-label="לינקדאין">in</a>
+          <a href="#" aria-label="אינסטגרם">ig</a>
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <h3>השאירו פרטים ונחזור אליכם</h3>
+        <form onsubmit="event.preventDefault(); document.getElementById('formMsg').style.display='block'; this.reset();">
+          <div class="form-row">
+            <div class="form-group">
+              <label>שם מלא</label>
+              <input type="text" placeholder="ישראל ישראלי" required>
+            </div>
+            <div class="form-group">
+              <label>טלפון</label>
+              <input type="tel" placeholder="050-0000000" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>אימייל</label>
+              <input type="email" placeholder="name@example.com" required>
+            </div>
+            <div class="form-group">
+              <label>אני מעוניין/ת ב</label>
+              <select required>
+                <option value="">בחרו נושא</option>
+                <option>גיוס עובד/ת לחברה שלי</option>
+                <option>חיפוש עבודה</option>
+                <option>כוח אדם זמני</option>
+                <option>אחר</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full">
+              <label>הודעה</label>
+              <textarea placeholder="ספרו לנו במה נוכל לעזור..."></textarea>
+            </div>
+          </div>
+          <button type="submit" class="submit-btn">שליחת פנייה</button>
+          <p class="form-note" id="formMsg" style="display:none;color:#0f2a4a;font-weight:700;">תודה! הפנייה נשלחה בהצלחה, ניצור איתכם קשר בהקדם.</p>
+        </form>
+      </div>
+
+    </div>
+
+    <div class="map-box">🗺️ מפת הגעה למשרדי Oasis</div>
+  </div>
+</section>
+
+<footer>
+  <div class="container footer-grid">
+    <div>
+      <div class="footer-logo">Oasis<span>.</span></div>
+      <p>חברת כוח אדם מובילה המספקת פתרונות גיוס והשמה מותאמים אישית לעסקים בכל הגדלים.</p>
+    </div>
+    <div>
+      <h4>ניווט</h4>
+      <ul>
+        <li><a href="index.html">בית</a></li>
+        <li><a href="index.html#services">שירותים</a></li>
+        <li><a href="index.html#why">למה אנחנו</a></li>
+        <li><a href="contact.html">צור קשר</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>שירותים</h4>
+      <ul>
+        <li><a href="index.html#services">השמה קבועה</a></li>
+        <li><a href="index.html#services">כוח אדם זמני</a></li>
+        <li><a href="index.html#services">איתור בכירים</a></li>
+        <li><a href="index.html#services">אאוטסורסינג</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>יצירת קשר</h4>
+      <ul>
+        <li>רחוב הברזל 3, תל אביב</li>
+        <li>03-1234567</li>
+        <li>info@oasis-hr.co.il</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Oasis כוח אדם. כל הזכויות שמורות.</div>
+</footer>
+
+</body>
+</html>
