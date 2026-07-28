@@ -157,13 +157,15 @@ document.getElementById('contactForm').addEventListener('submit', async function
   btn.disabled = true;
   btn.textContent = 'שולח...';
 
-  const { error } = await supabaseClient.from('contact_submissions').insert({
+  const formData = {
     full_name: document.getElementById('f_name').value,
     phone: document.getElementById('f_phone').value,
     email: document.getElementById('f_email').value,
     subject: document.getElementById('f_subject').value,
     message: document.getElementById('f_message').value
-  });
+  };
+
+  const { error } = await supabaseClient.from('contact_submissions').insert(formData);
 
   btn.disabled = false;
   btn.textContent = 'שליחת פנייה';
@@ -174,6 +176,12 @@ document.getElementById('contactForm').addEventListener('submit', async function
   } else {
     msg.style.display = 'block';
     e.target.reset();
+
+    fetch('/api/notify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    }).catch(notifyErr => console.error('Email notification failed:', notifyErr));
   }
 });
 </script>
