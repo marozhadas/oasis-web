@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>ניהול פניות - Oasis</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<style>
+  body{background:var(--gray)}
+  .admin-wrap{max-width:1100px;margin:0 auto;padding:60px 24px}
+  .lock-box{
+    max-width:380px;margin:120px auto;background:var(--white);border-radius:18px;
+    padding:40px 34px;box-shadow:0 10px 40px rgba(15,42,74,.1);text-align:center;
+  }
+  .lock-box h2{color:var(--navy);margin-bottom:20px;font-size:22px}
+  .lock-box input{
+    width:100%;padding:13px 16px;border:1.5px solid #e2e6ea;border-radius:10px;
+    font-size:16px;text-align:center;letter-spacing:4px;margin-bottom:14px;
+  }
+  .lock-box button{
+    width:100%;padding:14px;background:var(--navy);color:var(--white);border:none;
+    border-radius:10px;font-weight:700;cursor:pointer;font-size:15px;
+  }
+  .lock-box button:hover{background:var(--gold);color:var(--navy-dark)}
+  .lock-err{color:#c0392b;font-size:13px;margin-top:10px;display:none;font-weight:600}
+  .admin-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;flex-wrap:wrap;gap:14px}
+  .admin-header h1{color:var(--navy);font-size:26px}
+  .admin-header .count{color:var(--muted);font-size:14px}
+  .logout-btn{background:var(--navy);color:var(--white);border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600}
+  .logout-btn:hover{background:var(--gold);color:var(--navy-dark)}
+  table{width:100%;border-collapse:collapse;background:var(--white);border-radius:14px;overflow:hidden;box-shadow:0 4px 20px rgba(15,42,74,.06)}
+  th,td{padding:14px 16px;text-align:right;font-size:14px;border-bottom:1px solid #eef0f3}
+  th{background:var(--navy);color:var(--white);font-weight:700}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--gray)}
+  .empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+  #adminContent{display:none}
+</style>
+</head>
+<body>
+
+<div id="lockScreen" class="lock-box">
+  <h2>🔒 כניסת מנהל</h2>
+  <input type="password" id="pwInput" placeholder="סיסמה" maxlength="20">
+  <button onclick="checkPassword()">כניסה</button>
+  <p class="lock-err" id="pwErr">סיסמה שגויה</p>
+</div>
+
+<div id="adminContent">
+  <div class="admin-wrap">
+    <div class="admin-header">
+      <div>
+        <h1>פניות שהתקבלו מהאתר</h1>
+        <p class="count" id="rowCount"></p>
+      </div>
+      <button class="logout-btn" onclick="logout()">התנתקות</button>
+    </div>
+    <div id="tableHolder">טוען...</div>
+  </div>
+</div>
+
+<script>
+const ADMIN_PASSWORD = "1234";
+
+function checkPassword(){
+  const val = document.getElementById('pwInput').value;
+  if(val === ADMIN_PASSWORD){
+    sessionStorage.setItem('oasis_admin_auth', '1');
+    showAdmin();
+  } else {
+    document.getElementById('pwErr').style.display = 'block';
+  }
+}
+
+document.getElementById('pwInput').addEventListener('keydown', e => {
+  if(e.key === 'Enter') checkPassword();
+});
+
+function logout(){
+  sessionStorage.removeItem('oasis_admin_auth');
+  location.reload();
+}
+
+async function showAdmin(){
+  document.getElementById('lockScreen').style.display = 'none';
+  document.getElementById('adminContent').style.display = 'block';
+
+  const { data, error } = await supabaseClient
+    .from('contact_submissions')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  const holder = document.getElementById('tableHolder');
+
+  if(error){
+    holder.innerHTML = '<div class="empty-state">שגיאה בטעינת הנתונים: ' + error.message + '</div>';
+    return;
+  }
+
+  document.getElementById('rowCount').textContent = data.length + ' פניות';
+
+  if(data.length === 0){
+    holder.innerHTML = '<div class="empty-state">עדיין לא התקבלו פניות</div>';
+    return;
+  }
+
+  let html = '<table><thead><tr><th>תאריך</th><th>שם מלא</th><th>טלפון</th><th>אימייל</th><th>נושא</th><th>הודעה</th></tr></thead><tbody>';
+  data.forEach(row => {
+    const date = new Date(row.created_at).toLocaleString('he-IL');
+    html += '<tr>' +
+      '<td>' + date + '</td>' +
+      '<td>' + escapeHtml(row.full_name) + '</td>' +
+      '<td>' + escapeHtml(row.phone) + '</td>' +
+      '<td>' + escapeHtml(row.email) + '</td>' +
+      '<td>' + escapeHtml(row.subject || '') + '</td>' +
+      '<td>' + escapeHtml(row.message || '') + '</td>' +
+      '</tr>';
+  });
+  html += '</tbody></table>';
+  holder.innerHTML = html;
+}
+
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+if(sessionStorage.getItem('oasis_admin_auth') === '1'){
+  showAdmin();
+}
+</script>
+
+</body>
+</html>

@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>צור קשר - Oasis</title>
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
 </head>
 <body>
 
@@ -63,25 +65,25 @@
 
       <div class="contact-form">
         <h3>השאירו פרטים ונחזור אליכם</h3>
-        <form onsubmit="event.preventDefault(); document.getElementById('formMsg').style.display='block'; this.reset();">
+        <form id="contactForm">
           <div class="form-row">
             <div class="form-group">
               <label>שם מלא</label>
-              <input type="text" placeholder="ישראל ישראלי" required>
+              <input type="text" id="f_name" placeholder="ישראל ישראלי" required>
             </div>
             <div class="form-group">
               <label>טלפון</label>
-              <input type="tel" placeholder="050-0000000" required>
+              <input type="tel" id="f_phone" placeholder="050-0000000" required>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
               <label>אימייל</label>
-              <input type="email" placeholder="name@example.com" required>
+              <input type="email" id="f_email" placeholder="name@example.com" required>
             </div>
             <div class="form-group">
               <label>אני מעוניין/ת ב</label>
-              <select required>
+              <select id="f_subject" required>
                 <option value="">בחרו נושא</option>
                 <option>גיוס עובד/ת לחברה שלי</option>
                 <option>חיפוש עבודה</option>
@@ -93,11 +95,12 @@
           <div class="form-row">
             <div class="form-group full">
               <label>הודעה</label>
-              <textarea placeholder="ספרו לנו במה נוכל לעזור..."></textarea>
+              <textarea id="f_message" placeholder="ספרו לנו במה נוכל לעזור..."></textarea>
             </div>
           </div>
-          <button type="submit" class="submit-btn">שליחת פנייה</button>
-          <p class="form-note" id="formMsg" style="display:none;color:#0f2a4a;font-weight:700;">תודה! הפנייה נשלחה בהצלחה, ניצור איתכם קשר בהקדם.</p>
+          <button type="submit" class="submit-btn" id="submitBtn">שליחת פנייה</button>
+          <p class="form-note" id="formMsg" style="display:none;color:#0e3d38;font-weight:700;">תודה! הפנייה נשלחה בהצלחה, ניצור איתכם קשר בהקדם.</p>
+          <p class="form-note" id="formErr" style="display:none;color:#c0392b;font-weight:700;">אירעה שגיאה בשליחה, נסו שוב מאוחר יותר.</p>
         </form>
       </div>
 
@@ -143,5 +146,36 @@
   <div class="footer-bottom">© 2026 Oasis כוח אדם. כל הזכויות שמורות.</div>
 </footer>
 
+<script>
+document.getElementById('contactForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  const msg = document.getElementById('formMsg');
+  const err = document.getElementById('formErr');
+  msg.style.display = 'none';
+  err.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'שולח...';
+
+  const { error } = await supabaseClient.from('contact_submissions').insert({
+    full_name: document.getElementById('f_name').value,
+    phone: document.getElementById('f_phone').value,
+    email: document.getElementById('f_email').value,
+    subject: document.getElementById('f_subject').value,
+    message: document.getElementById('f_message').value
+  });
+
+  btn.disabled = false;
+  btn.textContent = 'שליחת פנייה';
+
+  if (error) {
+    console.error(error);
+    err.style.display = 'block';
+  } else {
+    msg.style.display = 'block';
+    e.target.reset();
+  }
+});
+</script>
 </body>
 </html>
